@@ -1,0 +1,134 @@
+<div class="row">
+	<div class="col-md-12">
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseEntrada" aria-expanded="false" aria-controls="collapseEntrada">
+		<i class="fa fa-sign-in" aria-hidden="true"></i> Entrada
+		</button>
+		<button class="btn btn-warning" type="button" data-toggle="collapse" data-target="#collapseSaida" aria-expanded="false" aria-controls="collapseSaida"><i class="fa fa-sign-out" aria-hidden="true"></i> Saida</button>
+		<div class="collapse" id="collapseEntrada">
+			<div class="well">
+				<form name="formEntrada">
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label for="placaVeiculo">Placa do Veículo</label>
+								<input type="text" class="form-control" name="placaVeiculo" placeholder="" maxlength="9" ng-model="modelAux.placaVeiculo" required>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label for="placaVeiculo">Horário de Chegada <span class="label label-info cPointer" ng-click="modelAux.chegada = tools.setTime()" title="Preencher com horário Atual"><i class="fa fa-clock-o" aria-hidden="true"></i></span></label>
+								<input type="text" class="form-control" name="placaVeiculo" placeholder="ex: 01/01/2017 11:43:34" ng-model="modelAux.chegada" required>
+							</div>
+						</div>
+                        <div class="col-sm-4">
+                            <div class="alert alert-danger" ng-show="msg">{{msg}}</div> 
+                        </div>
+					</div>
+					<div class="text-right">
+						<button class="btn btn-success" type="button" ng-click="tools.addVeiculo()"><i class="fa fa-plus"></i> Cadastrar Entrada</button>
+						<button class="btn btn-danger" type="button" ng-click="tools.clearEntrada()"><i class="fa fa-ban"></i> Cancelar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+        <div class="collapse" id="collapseSaida">
+            <div class="well">
+                <form name="formSaida">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="placaVeiculo">Placa do Veículo</label>
+                                <input type="text" class="form-control" name="placaVeiculo" placeholder="" maxlength="9" ng-model="placaVeiculo" required>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <button class="btn btn-info m-t-25" type="button" ng-click="tools.buscaVeiculo()"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" ng-show="msg">{{msg}}</div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="modelAux.placaVeiculo">
+                        <div class="col-md-8">
+                            <h4 class="m-t-25">Veiculo: <span class="label label-success">{{modelAux.placaVeiculo}}</span> - Hora de entrada: <span class="label label-success">{{modelAux.chegada}}</span></h4>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="dataSaida">Data/Hora de Saida <span class="label label-info cPointer" ng-click="modelAux.saida = tools.setTime()" title="Preencher com horário Atual"><i class="fa fa-clock-o" aria-hidden="true"></i></span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="dataSaida" placeholder="Ex: 22/07/2017 11:35:19" ng-model="modelAux.saida" required>
+                                    <span class="input-group-addon cPointer" title="Calcular" ng-click="tools.calculaValor()"><i class="fa fa-calculator"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Duração</th>
+                                        <th>Tempo Cobrado</th>
+                                        <th>Preço</th>
+                                        <th>Valor a Pagar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{modelAux.duracao || '--'}}</td>
+                                        <td>{{modelAux.tCobrado || '--'}}</td>
+                                        <td>{{modelAux.preco | currency}}</td>
+                                        <td>{{(modelAux.valor | currency) || '--'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-right">
+                                <button class="btn btn-success" type="button" ng-click="tools.confirmaSaida()"><i class="fa fa-check"></i> Confirma Saida</button>
+                                <button class="btn btn-danger" type="button" ng-click="tools.cancelSaida()"><i class="fa fa-ban"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-car"></i> Veículos no Estacionamento</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Placa Veículo</th>
+							<th>Horário de Chegada</th>
+							<th>Horário de Saída</th>
+							<th>Duração</th>
+							<th>Tempo Cobrado</th>
+							<th>Preço</th>
+							<th>Valor a pagar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="car in modelEstacionamento track by $index">
+							<th scope="row">{{car.placaVeiculo}}</th>
+							<td>{{car.chegada || '--'}}</td>
+							<td>{{car.saida || '--'}}</td>
+							<td>{{car.duracao || '--'}}</td>
+							<td>{{car.tCobrado || '--'}}</td>
+							<td>{{(car.preco | currency) || '--'}}</td>
+							<td>{{(car.valor | currency) || '--'}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-striped table-condensed">
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
